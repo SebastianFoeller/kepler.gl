@@ -29,7 +29,12 @@ import {media} from 'styles/media-breakpoints';
 
 const maxWidth = 1080;
 
-const BottomWidgetContainer = styled.div`
+interface BottomWidgetContainerProps {
+  hasPadding?: boolean;
+  width?: number;
+}
+
+const BottomWidgetContainer = styled.div<BottomWidgetContainerProps>`
   display: flex;
   flex-direction: column;
   padding-top: ${props => (props.hasPadding ? props.theme.bottomWidgetPaddingTop : 0)}px;
