@@ -52,7 +52,9 @@ const BottomWidgetContainer = styled.div<BottomWidgetContainerProps>`
 `;
 
 FilterAnimationControllerFactory.deps = [AnimationControllerFactory];
-export function FilterAnimationControllerFactory(AnimationController: ReturnType<typeof AnimationControllerFactory>) {
+export function FilterAnimationControllerFactory(
+  AnimationController: ReturnType<typeof AnimationControllerFactory>
+) {
   const FilterAnimationController = ({filter, filterIdx, setFilterAnimationTime, children}) => {
     const intervalBins = useMemo(() => getIntervalBins(filter), [filter]);
 
@@ -96,7 +98,9 @@ export function FilterAnimationControllerFactory(AnimationController: ReturnType
 }
 
 LayerAnimationControllerFactory.deps = [AnimationControllerFactory];
-export function LayerAnimationControllerFactory(AnimationController: ReturnType<typeof AnimationControllerFactory>) {
+export function LayerAnimationControllerFactory(
+  AnimationController: ReturnType<typeof AnimationControllerFactory>
+) {
   const LayerAnimationController = ({animationConfig, setLayerAnimationTime, children}) => (
     <AnimationController
       key="layer-control"

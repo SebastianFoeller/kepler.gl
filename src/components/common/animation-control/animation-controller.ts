@@ -33,7 +33,7 @@ type AnimationControllerProps = {
   domain: number[];
   value: number[];
   baseSpeed?: number;
-}
+};
 
 function AnimationControllerFactory() {
   /**
@@ -59,14 +59,13 @@ function AnimationControllerFactory() {
    * animate a moving point jumps to the next step
    */
   class AnimationController extends Component<AnimationControllerProps> {
-
     static defaultProps = {
       baseSpeed: BASE_SPEED,
       speed: 1,
       steps: null,
       animationWindow: ANIMATION_WINDOW.free
     };
-    
+
     state = {
       isAnimating: false
     };
@@ -130,7 +129,7 @@ function AnimationControllerFactory() {
     };
 
     _resetAnimtionByTimeStep = () => {
-      const {steps = null} = this.props
+      const {steps = null} = this.props;
       if (!steps) return;
       // go to the first steps
       this.props.updateAnimation([steps[0], 0]);
