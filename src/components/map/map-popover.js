@@ -80,10 +80,10 @@ const StyledMapPopover = styled.div`
     grid-template-columns: auto auto;
   }
 
-  tbody,
-  tr {
-    display: contents;
-  }
+  // tbody,
+  // tr {
+  //   display: contents;
+  // }
 
   td {
     border-color: transparent;

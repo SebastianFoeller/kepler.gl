@@ -51,6 +51,9 @@ const StyledTable = styled.table`
   }
 `;
 
+const EMBED_TWEET_URL =
+  'https://platform.twitter.com/embed/Tweet.html?dnt=true&frame=false&hideCard=false&hideThread=true&width=550px&id=';
+
 /** @type {import('./layer-hover-info').RowComponent} */
 const Row = ({name, value, deltaValue, url}) => {
   // Set 'url' to 'value' if it looks like a url
@@ -59,31 +62,56 @@ const Row = ({name, value, deltaValue, url}) => {
   }
 
   const asImg = /<img>/.test(name);
-  return (
-    <tr className="row" key={name}>
-      <td className="row__name">{name}</td>
-      <td className="row__value">
-        {asImg ? (
-          <img src={value} />
-        ) : url ? (
-          <a target="_blank" rel="noopener noreferrer" href={url}>
-            {value}
-          </a>
-        ) : (
-          value
-        )}
-      </td>
-      {notNullorUndefined(deltaValue) && (
-        <td
-          className={`row__delta-value ${
-            deltaValue.toString().charAt(0) === '+' ? 'positive' : 'negative'
-          }`}
-        >
-          {deltaValue}
+
+  if (/<media_url>/.test(name)) {
+    if (value.startsWith('https://twitter.com/')) {
+      const matched = value.match(/\/status\/(\d+)/);
+      const embedTweetUrl = matched ? EMBED_TWEET_URL.concat(matched[1]) : undefined;
+      console.log('embedUrl', embedTweetUrl);
+      return (
+        <tr className="row" key={name}>
+          <td colSpan={2}>
+            <iframe
+              height="440px"
+              width="500px"
+              src={embedTweetUrl}
+              allowFullScreen
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            ></iframe>
+          </td>
+        </tr>
+      );
+    } else {
+      return <div></div>;
+    }
+  } else {
+    return (
+      <tr className="row" key={name}>
+        <td className="row__name">{name}</td>
+        <td className="row__value">
+          {asImg ? (
+            <img src={value} />
+          ) : url ? (
+            <a target="_blank" rel="noopener noreferrer" href={url}>
+              {value}
+            </a>
+          ) : (
+            value
+          )}
         </td>
-      )}
-    </tr>
-  );
+        {notNullorUndefined(deltaValue) && (
+          <td
+            className={`row__delta-value ${
+              deltaValue.toString().charAt(0) === '+' ? 'positive' : 'negative'
+            }`}
+          >
+            {deltaValue}
+          </td>
+        )}
+      </tr>
+    );
+  }
 };
 
 const EntryInfo = ({fieldsToShow, fields, data, primaryData, compareType}) => (
