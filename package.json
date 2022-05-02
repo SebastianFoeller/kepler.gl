@@ -1,6 +1,6 @@
 {
   "name": "@sebf/kepler.gl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "kepler.gl is a webgl based application to visualize large scale location data in the browser",
   "license": "MIT",
   "main": "dist/index.js",
