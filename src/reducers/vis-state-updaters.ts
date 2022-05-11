@@ -870,6 +870,7 @@ export function setFilterUpdater(
     Console.error(`filters.${idx} is undefined`);
     return state;
   }
+  console.log('setFilterUpdater oldFilter', oldFilter);
   let newFilter = set([prop], value, oldFilter);
   let newState = state;
 
@@ -884,26 +885,33 @@ export function setFilterUpdater(
     // 2. Add a new dataset id
     case FILTER_UPDATER_PROPS.dataId:
       // if trying to update filter dataId. create an empty new filter
-      newFilter = updateFilterDataId(dataId);
+      if (!dataId.length) {
+        newFilter = updateFilterDataId(dataId);
+      } else {
+        newFilter.dataId = toArray(dataId);
+      }
+      console.log('setFilterUpdater dataId newFilter', newFilter);
       break;
 
     case FILTER_UPDATER_PROPS.name:
       // we are supporting the current functionality
       // TODO: Next PR for UI filter name will only update filter name but it won't have side effects
       // we are gonna use pair of datasets and fieldIdx to update the filter
+
       const datasetId = newFilter.dataId[valueIndex];
       const {filter: updatedFilter, dataset: newDataset} = applyFilterFieldName(
-        newFilter,
+        oldFilter,
         state.datasets[datasetId],
         value,
         valueIndex,
-        {mergeDomain: false}
+        {mergeDomain: newFilter.dataId.length > 1 ? true : false}
       );
       if (!updatedFilter) {
         return state;
       }
 
       newFilter = updatedFilter;
+      console.log('setFilterUpdater name newFilter', newFilter);
 
       if (newFilter.gpu) {
         newFilter = setFilterGpuMode(newFilter, state.filters);

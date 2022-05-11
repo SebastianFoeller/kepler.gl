@@ -65,6 +65,7 @@ interface RangeSliderProps {
   value1: number;
   onChange?: (val: number[]) => void; //TODO
   histogram?: any[];
+  histogramCollection?: {[key: string]: any[]};
   isRanged?: boolean;
   isEnlarged?: boolean;
   showInput?: boolean;
@@ -223,6 +224,7 @@ export default function RangeSliderFactory(RangePlot: ReturnType<typeof RangePlo
         isRanged,
         showInput,
         histogram,
+        histogramCollection,
         lineChart,
         range,
         onChange = () => {},
@@ -247,6 +249,7 @@ export default function RangeSliderFactory(RangePlot: ReturnType<typeof RangePlo
               {renderPlot ? (
                 <RangePlot
                   histogram={histogram}
+                  histogramCollection={histogramCollection}
                   lineChart={this.props.lineChart}
                   plotType={this.props.plotType}
                   isEnlarged={this.props.isEnlarged}

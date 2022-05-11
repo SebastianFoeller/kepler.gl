@@ -970,12 +970,23 @@ export function applyFilterFieldName(
   // TODO: validate field type
   const filterProps = dataset.getColumnFilterProps(fieldName);
 
+  // Figure out how to handle when dataId changes
+  if (filterProps.histogram) {
+    if (!filter.histogramCollection) {
+      filter.histogramCollection = {};
+      filter.histogramCollection[filter.dataId[0]] = filterProps.enlargedHistogram;
+    } else {
+      let lastDataId = filter.dataId[filter.dataId.length - 1];
+      filter.histogramCollection[lastDataId] = filterProps.enlargedHistogram;
+    }
+  }
+  console.log('applyFilterFieldName filter', filter);
+  console.log('applyFilterFieldName filterProps', filterProps);
+
   const newFilter = {
     ...(mergeDomain ? mergeFilterDomainStep(filter, filterProps) : {...filter, ...filterProps}),
     name: Object.assign([...toArray(filter.name)], {[filterDatasetIndex]: fieldName}),
-    fieldIdx: Object.assign([...toArray(filter.fieldIdx)], {
-      [filterDatasetIndex]: fieldIndex
-    }),
+    fieldIdx: Object.assign([...toArray(filter.fieldIdx)], {[filterDatasetIndex]: fieldIndex}),
     // TODO, since we allow to add multiple fields to a filter we can no longer freeze the filter
     freeze: true
   };

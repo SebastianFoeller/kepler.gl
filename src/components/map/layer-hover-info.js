@@ -67,7 +67,6 @@ const Row = ({name, value, deltaValue, url}) => {
     if (value.startsWith('https://twitter.com/')) {
       const matched = value.match(/\/status\/(\d+)/);
       const embedTweetUrl = matched ? EMBED_TWEET_URL.concat(matched[1]) : undefined;
-      console.log('embedUrl', embedTweetUrl);
       return (
         <tr className="row" key={name}>
           <td colSpan={2}>

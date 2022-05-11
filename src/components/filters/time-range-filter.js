@@ -41,6 +41,7 @@ export function timeRangeSliderFieldsSelector(filter) {
     step: filter.step,
     speed: filter.speed,
     histogram: filter.enlarged ? filter.enlargedHistogram : filter.histogram,
+    histogramCollection: filter.histogramCollection,
     isEnlarged: filter.enlarged,
     animationWindow: filter.animationWindow,
     isAnimating: filter.isAnimating,

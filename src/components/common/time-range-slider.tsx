@@ -74,6 +74,7 @@ export default function TimeRangeSliderFactory(
       timeFormat,
       timezone,
       histogram,
+      histogramCollection,
       plotType,
       lineChart,
       step,
@@ -115,6 +116,7 @@ export default function TimeRangeSliderFactory(
               value0={value[0]}
               value1={value[1]}
               histogram={histogram}
+              histogramCollection={histogramCollection}
               lineChart={lineChart}
               plotType={plotType}
               isEnlarged={isEnlarged}
@@ -152,6 +154,7 @@ export default function TimeRangeSliderFactory(
     step: PropTypes.number.isRequired,
     plotType: PropTypes.string,
     histogram: PropTypes.arrayOf(PropTypes.any),
+    histogramCollection: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.any)),
     lineChart: PropTypes.object,
     toggleAnimation: PropTypes.func.isRequired,
     exportAnimation: PropTypes.func,

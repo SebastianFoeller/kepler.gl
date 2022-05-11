@@ -40,6 +40,7 @@ interface RangePlotProps {
   plotType?: string;
   lineChart: LineChart;
   histogram?: {x0: number; x1: number}[];
+  histogramCollection?: {[key: string]: {x0: number; x1: number}[]};
   isEnlarged?: boolean;
   isRanged?: boolean;
   theme: any;
@@ -63,6 +64,7 @@ export default function RangePlotFactory(
     plotType,
     lineChart,
     histogram,
+    histogramCollection,
     isEnlarged,
     isRanged,
     theme,
@@ -135,7 +137,11 @@ export default function RangePlotFactory(
         {plotType === 'lineChart' && lineChart ? (
           <LineChart lineChart={lineChart} {...commonProps} />
         ) : (
-          <HistogramPlot histogram={histogram} {...commonProps} />
+          <HistogramPlot
+            histogram={histogram}
+            histogramCollection={histogramCollection}
+            {...commonProps}
+          />
         )}
       </StyledRangePlot>
     );

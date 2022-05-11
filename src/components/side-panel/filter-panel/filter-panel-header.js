@@ -26,6 +26,7 @@ import {createLinearGradient} from 'utils/color-utils';
 import {StyledPanelHeader} from 'components/common/styled-components';
 
 export const StyledFilterHeader = styled(StyledPanelHeader)`
+  height: auto;
   cursor: pointer;
   padding: 10px 12px;
 
@@ -43,6 +44,7 @@ export const StyledFilterHeader = styled(StyledPanelHeader)`
 const StyledChildrenContainer = styled.div`
   display: flex;
   flex: 2;
+  width: 100%;
 `;
 
 FilterPanelHeaderFactory.deps = [PanelHeaderActionFactory];
@@ -59,7 +61,8 @@ function FilterPanelHeaderFactory(PanelHeaderAction) {
     idx,
     filter,
     removeFilter,
-    actionIcons = defaultActionIcons
+    actionIcons = defaultActionIcons,
+    setIconFlush = false
   }) => (
     <StyledFilterHeader
       className="filter-panel__header"
@@ -73,6 +76,7 @@ function FilterPanelHeaderFactory(PanelHeaderAction) {
         onClick={removeFilter}
         hoverColor={'errorColor'}
         IconComponent={actionIcons.delete}
+        flush={setIconFlush}
       />
     </StyledFilterHeader>
   );

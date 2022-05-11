@@ -22,15 +22,48 @@ import React, {useCallback, useMemo} from 'react';
 import TimeRangeFilterFactory from 'components/filters/time-range-filter';
 import {Clock} from 'components/common/icons';
 import SourceDataSelectorFactory from 'components/side-panel/common/source-data-selector';
-import FieldPanelWithFieldSelectFactory from 'components/filters/filter-panels/filter-panel-with-field-select';
+import FilterPanelHeaderFactory from 'components/side-panel/filter-panel/filter-panel-header';
+import PanelHeaderActionFactory from 'components/side-panel/panel-header-action';
+import FieldSelectorFactory from '../../common/field-selector';
+import {StyledFilterContent} from 'components/common/styled-components';
+import MultiTimeFilterPanelFactory from 'components/filters/filter-panels/multi-time-filter-panel';
+import styled from 'styled-components';
+import FieldTokenFactory from 'components/common/field-token';
+import {ALL_FIELD_TYPES} from 'constants/default-settings';
+
+const StyledFilterHeader = styled.div`
+  height: auto;
+`;
+
+const StyledToken = styled.div`
+  display: inline-block;
+  margin: 0 ${props => props.theme.fieldTokenRightMargin}px 0 0;
+  width: 100%;
+`;
 
 TimeRangeFilterPanelFactory.deps = [
-  FieldPanelWithFieldSelectFactory,
+  MultiTimeFilterPanelFactory,
+  FilterPanelHeaderFactory,
+  FieldSelectorFactory,
+  PanelHeaderActionFactory,
   TimeRangeFilterFactory,
-  SourceDataSelectorFactory
+  FieldTokenFactory
 ];
 
-function TimeRangeFilterPanelFactory(FieldPanelWithFieldSelect, TimeRangeFilter) {
+export function getSupportedFilterFields(supportedFilterTypes, fields) {
+  return supportedFilterTypes
+    ? fields.filter(field => supportedFilterTypes.includes(field.type))
+    : fields;
+}
+
+function TimeRangeFilterPanelFactory(
+  MultiTimeFilterPanel,
+  FilterPanelHeader,
+  FieldSelector,
+  PanelHeaderAction,
+  TimeRangeFilter,
+  FieldToken
+) {
   /** @type {import('./filter-panel-types').FilterPanelComponent} */
   const TimeRangeFilterPanel = React.memo(
     ({
@@ -59,17 +92,74 @@ function TimeRangeFilterPanelFactory(FieldPanelWithFieldSelect, TimeRangeFilter)
         [filter.id, filter.enlarged, enlargeFilter]
       );
 
+      const onFieldSelector = useCallback(field => setFilter(idx, 'name', field.name), [
+        idx,
+        setFilter
+      ]);
+
+      const onSourceDataSelector = useCallback(value => setFilter(idx, 'dataId', value), [
+        idx,
+        setFilter
+      ]);
+
+      const fieldValue = useMemo(
+        () => ((Array.isArray(filter.name) ? filter.name[0] : filter.name)),
+        [filter.name]
+      );
+
+      const dataset = datasets[filter.dataId[0]];
+      const supportedFields = useMemo(
+        () => getSupportedFilterFields(dataset.supportedFilterTypes, allAvailableFields),
+        [dataset.supportedFilterTypes, allAvailableFields]
+      );
+
       return (
         <>
-          <FieldPanelWithFieldSelect
-            allAvailableFields={allAvailableFields}
-            datasets={datasets}
-            filter={filter}
-            idx={idx}
-            removeFilter={removeFilter}
-            setFilter={setFilter}
-            panelActions={panelActions}
-          >
+          <StyledFilterHeader>
+            <FilterPanelHeader
+              datasets={[dataset]}
+              allAvailableFields={allAvailableFields}
+              idx={idx}
+              filter={filter}
+              removeFilter={removeFilter}
+            >
+              {filter.dataId.length <= 1 && (
+                <FieldSelector
+                  inputTheme="secondary"
+                  fields={allAvailableFields}
+                  value={fieldValue}
+                  erasable={false}
+                  onSelect={onFieldSelector}
+                />
+              )}
+              {filter.dataId.length > 1 && (
+                <StyledToken>
+                  <FieldToken type={ALL_FIELD_TYPES.timestamp} />
+                </StyledToken>
+              )}
+              {panelActions &&
+                panelActions.map(panelAction => (
+                  <PanelHeaderAction
+                    id={panelAction.id}
+                    key={panelAction.id}
+                    onClick={panelAction.onClick}
+                    tooltip={panelAction.tooltip}
+                    IconComponent={panelAction.iconComponent}
+                    active={panelAction.active}
+                  />
+                ))}
+            </FilterPanelHeader>
+          </StyledFilterHeader>
+          <StyledFilterContent>
+            <MultiTimeFilterPanel
+              datasets={datasets}
+              filter={filter}
+              idx={idx}
+              onFieldSelector={onFieldSelector}
+              onSourceDataSelector={onSourceDataSelector}
+              setFilter={setFilter}
+              allAvailableFields={supportedFields}
+            />
             {filter.type && !filter.enlarged && (
               <div className="filter-panel__filter">
                 <TimeRangeFilter
@@ -81,7 +171,7 @@ function TimeRangeFilterPanelFactory(FieldPanelWithFieldSelect, TimeRangeFilter)
                 />
               </div>
             )}
-          </FieldPanelWithFieldSelect>
+          </StyledFilterContent>
         </>
       );
     }

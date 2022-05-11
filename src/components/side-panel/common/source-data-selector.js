@@ -36,6 +36,7 @@ export default function SourceDataSelectorFactory(DatasetTag) {
   class SourceDataSelector extends Component {
     /* selectors */
     /* eslint-disable no-invalid-this */
+
     datasetsSelector = props => props.datasets;
     dsOptionsSelector = createSelector(this.datasetsSelector, datasets =>
       Object.values(datasets).map(ds => ({
@@ -48,26 +49,38 @@ export default function SourceDataSelectorFactory(DatasetTag) {
     render() {
       const {dataId, disabled, onSelect, defaultValue, inputTheme} = this.props;
       const dsOptions = this.dsOptionsSelector(this.props);
-
       return (
-        <SidePanelSection className="data-source-selector">
-          <PanelLabel>
-            <FormattedMessage id={'misc.dataSource'} />
-          </PanelLabel>
-          <ItemSelector
-            inputTheme={inputTheme}
-            selectedItems={dataId ? this.props.datasets[dataId] : null}
-            options={dsOptions}
-            getOptionValue={'value'}
-            filterOption={'label'}
-            multiSelect={false}
-            onChange={onSelect}
-            placeholder={defaultValue}
-            disabled={Boolean(disabled)}
-            displayOption={'label'}
-            DropDownLineItemRenderComponent={DatasetItem}
-          />
-        </SidePanelSection>
+        // <SidePanelSection className="data-source-selector">
+        //   <PanelLabel>
+        //     <FormattedMessage id={'misc.dataSource'} />
+        //   </PanelLabel>
+        //   <ItemSelector
+        //     inputTheme={inputTheme}
+        //     selectedItems={dataId ? this.props.datasets[dataId] : null}
+        //     options={dsOptions}
+        //     getOptionValue={'value'}
+        //     filterOption={'label'}
+        //     multiSelect={false}
+        //     onChange={onSelect}
+        //     placeholder={defaultValue}
+        //     disabled={Boolean(disabled)}
+        //     displayOption={'label'}
+        //     DropDownLineItemRenderComponent={DatasetItem}
+        //   />
+        // </SidePanelSection>
+        <ItemSelector
+          inputTheme={inputTheme}
+          selectedItems={dataId ? this.props.datasets[dataId] : null}
+          options={dsOptions}
+          getOptionValue={'value'}
+          filterOption={'label'}
+          multiSelect={false}
+          onChange={onSelect}
+          placeholder={defaultValue}
+          disabled={Boolean(disabled)}
+          displayOption={'label'}
+          DropDownLineItemRenderComponent={DatasetItem}
+        />
       );
     }
   }
